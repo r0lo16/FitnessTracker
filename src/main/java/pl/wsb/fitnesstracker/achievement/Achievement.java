@@ -1,4 +1,4 @@
-package pl.wsb.fitnesstracker.event;
+package pl.wsb.fitnesstracker.achievement;
 
 import jakarta.annotation.Nullable;
 import jakarta.persistence.Column;
@@ -6,20 +6,23 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import pl.wsb.fitnesstracker.user.api.User;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "event")
+@Table(name = "achievement")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @ToString
-public class Event {
+public class Achievement {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,23 +32,16 @@ public class Event {
     @Column(nullable = false)
     private String name;
 
-    @Column(name = "start_date", nullable = false)
-    private LocalDate startDate;
+    @Column(name = "earned_at", nullable = false)
+    private LocalDateTime earnedAt;
 
-    @Column(nullable = false)
-    private String location;
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 
-    public Event(final String name, final LocalDate startDate, final String location) {
+    public Achievement(final String name, final LocalDateTime earnedAt, final User user) {
         this.name = name;
-        this.startDate = startDate;
-        this.location = location;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public String getName() {
-        return name;
+        this.earnedAt = earnedAt;
+        this.user = user;
     }
 }
