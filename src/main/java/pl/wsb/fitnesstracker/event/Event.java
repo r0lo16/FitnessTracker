@@ -40,12 +40,4 @@ public class Event {
         this.startDate = startDate;
         this.location = location;
     }
-
-    public Long getId() {
-        return id;
-    }
-
-    public String getName() {
-        return name;
-    }
 }
