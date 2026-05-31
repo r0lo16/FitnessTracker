@@ -1,8 +1,8 @@
 package pl.wsb.fitnesstracker.loader;
 
-import lombok.RequiredArgsConstructor;
 import lombok.ToString;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Profile;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.context.event.EventListener;
@@ -27,14 +27,23 @@ import static java.util.Objects.isNull;
  */
 @Component
 @Profile("loadInitialData")
-@Slf4j
 @ToString
-@RequiredArgsConstructor
 class InitialDataLoader {
+
+    // Jawny logger zastępuje generowanie pola przez Lombok podczas kompilacji Maven.
+    private static final Logger LOG = LoggerFactory.getLogger(InitialDataLoader.class);
 
     private final JpaRepository<User, Long> userRepository;
 
     private final JpaRepository<Training, Long> trainingRepository;
+
+    InitialDataLoader(
+            JpaRepository<User, Long> userRepository,
+            JpaRepository<Training, Long> trainingRepository) {
+        // Jawny konstruktor pozwala Springowi wstrzyknac repozytoria bez generowania kodu przez Lombok.
+        this.userRepository = userRepository;
+        this.trainingRepository = trainingRepository;
+    }
 
     @EventListener
     @Transactional
@@ -42,13 +51,13 @@ class InitialDataLoader {
     public void loadInitialData(ContextRefreshedEvent event) {
         verifyDependenciesAutowired();
 
-        log.info("Loading initial data to the database");
+        LOG.info("Loading initial data to the database");
 
         List<User> sampleUserList = generateSampleUsers();
         List<Training> sampleTrainingList = generateTrainingData(sampleUserList);
 
 
-        log.info("Finished loading initial data");
+        LOG.info("Finished loading initial data");
     }
 
     private User generateUser(String name, String lastName, int age) {
