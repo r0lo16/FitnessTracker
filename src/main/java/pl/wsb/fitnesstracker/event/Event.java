@@ -40,4 +40,13 @@ public class Event {
         this.startDate = startDate;
         this.location = location;
     }
+
+    // Jawne gettery sa potrzebne starszym testom LAB03 podczas kompilacji projektu.
+    public Long getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
 }

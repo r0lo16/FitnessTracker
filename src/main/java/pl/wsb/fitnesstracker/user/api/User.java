@@ -21,6 +21,13 @@ public class User {
     @Nullable
     private Long id;
 
+    // Pola dodane w LAB04, aby API moglo zwracac imie i nazwisko uzytkownika.
+    @Column(name = "first_name", nullable = false)
+    private String firstName;
+
+    @Column(name = "last_name", nullable = false)
+    private String lastName;
+
     @Column(name = "birthdate", nullable = false)
     private LocalDate birthdate;
 
@@ -32,9 +39,33 @@ public class User {
             final String lastName,
             final LocalDate birthdate,
             final String email) {
-
+        // Konstruktor zapisuje komplet danych wymaganych przez encje uzytkownika.
+        this.firstName = firstName;
+        this.lastName = lastName;
         this.birthdate = birthdate;
         this.email = email;
+    }
+
+    // Jawne gettery udostepniaja dane mapperowi DTO i testom integracyjnym.
+    @Nullable
+    public Long getId() {
+        return id;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public LocalDate getBirthdate() {
+        return birthdate;
+    }
+
+    public String getEmail() {
+        return email;
     }
 
 }

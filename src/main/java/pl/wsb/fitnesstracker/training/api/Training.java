@@ -1,27 +1,54 @@
 package pl.wsb.fitnesstracker.training.api;
 
-import lombok.Getter;
+import jakarta.annotation.Nullable;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 import pl.wsb.fitnesstracker.training.internal.ActivityType;
 import pl.wsb.fitnesstracker.user.api.User;
 
 import java.util.Date;
 
-@Getter
+// Encja JPA potrzebna, aby Hibernate poprawnie zbudowal relacje z WorkoutSession.
+@Entity
+@Table(name = "trainings")
 public class Training {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Nullable
     private Long id;
 
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
+    @Column(name = "start_time", nullable = false)
     private Date startTime;
 
+    @Column(name = "end_time", nullable = false)
     private Date endTime;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "activity_type", nullable = false)
     private ActivityType activityType;
 
+    @Column(nullable = false)
     private double distance;
 
+    @Column(name = "average_speed", nullable = false)
     private double averageSpeed;
+
+    // Konstruktor bezargumentowy jest wymagany przez JPA.
+    protected Training() {
+    }
 
     public Training(
             final User user,
@@ -36,5 +63,35 @@ public class Training {
         this.activityType = activityType;
         this.distance = distance;
         this.averageSpeed = averageSpeed;
+    }
+
+    // Jawne gettery udostepniaja pola repozytoriom i testom bez generowania kodu przez Lombok.
+    @Nullable
+    public Long getId() {
+        return id;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public Date getStartTime() {
+        return startTime;
+    }
+
+    public Date getEndTime() {
+        return endTime;
+    }
+
+    public ActivityType getActivityType() {
+        return activityType;
+    }
+
+    public double getDistance() {
+        return distance;
+    }
+
+    public double getAverageSpeed() {
+        return averageSpeed;
     }
 }
